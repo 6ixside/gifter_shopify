@@ -8,15 +8,19 @@ var app = express();
 
 var apiKey = process.env.API_KEY;
 var apiSecret = process.env.API_SECRET;
-var appUrl = "https://9851dfb1.ngrok.io";
+var appUrl = "https://76bbfe42.ngrok.io";
 
 let authentication = require('./server/middlewares/authentication.js')(apiKey, apiSecret);
 
+var scopes = 'write_script_tags'
 tokens = {};
+
+app.get('/', (req, res, next) =>{
+  res.send('test2');
+})
 
 app.get('/gifter/install', (req, res, next) => {
 	var shop = req.query.shop;
-	var scopes = 'write_script_tags'
 	
 	if(shop){
 		var state = nonce()(); //idk why nonce now needs to be called like this??
@@ -45,36 +49,41 @@ app.get('/gifter/setup', async (req, res, next) =>{
     }, (err) =>{
       console.log(err);
     });
-  }
 
-  let headers = {
-    'X-Shopify-Access-Token': tokens[shop]
-  }
-
-  let body = {
-    "script_tag": {
-      "event": 'onload',
-      "src": appUrl + '/test'
+    let headers = {
+      'X-Shopify-Access-Token': tokens[shop]
     }
+
+    let body = {
+      "script_tag": {
+        "event": 'onload',
+        "src": appUrl + '/test'
+      }
+    }
+
+    request.post({
+      url: scriptTagUrl,
+      headers: headers,
+      body: body,
+      json: true
+    }).then((shopRes) => {
+      console.log(shopRes);
+
+      request.get({
+        url: 'https://' + shop + '/admin/script_tags.json',
+        headers: headers
+      }).then((data) => {console.log(data);})
+    }, (err) =>{
+      console.log('error: ' + err);
+    });
   }
 
-  request.post({
-    url: scriptTagUrl,
-    headers: headers,
-    body: body,
-    json: true
-  }).then((shopRes) => {
-    console.log(shopRes);
+  next();
+  //res.redirect(appUrl + '/gifter/auth');
+}, (req, res, next) =>{
+  var shop = req.query.shop;
 
-    request.get({
-      url: 'https://' + shop + '/admin/script_tags.json',
-      headers: headers
-    }).then((data) => {console.log(data);})
-
-    res.status(200).send('Installation Complete!');
-  }, (err) =>{
-    console.log('error: ' + err);
-  });
+  res.status(200).send('<p>Admin Panel</p>');
 });
 
 app.get('/gifter/auth', (req, res, next) =>{
