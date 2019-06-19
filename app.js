@@ -1,39 +1,36 @@
 var request = require('request-promise');
 var express = require('express');
+var next = require('next');
 var cookie = require('cookie');
-var nonce = require('nonce');
 var dontenv = require('dotenv').config()
 
-var app = express();
+var dev = process.env.NODE_ENV !== 'production';
+var app = next({ dev,
+  dir: './src'
+});
+var handle = app.getRequestHandler();
 
 var tokens = {}
-const index = require('./server/routes/index')(tokens);
+const index = require('./server/routes/index')(tokens, app);
 const install = require('./server/routes/install')(tokens);
 
+app.prepare().then(() => {
+  var server = express();
 
-/*app.get('/gifter/auth', async (req, res, next) =>{
-  var shop = req.query.shop;
+  server.use('/', index);
+  server.use('/install', install);
 
-  if(tokens[shop] == undefined){
-    await authentication.getAccessToken(req, res, next).then((token) =>{
-      tokens[shop] = token;
-      console.log(tokens);
+  server.get('*', (req, res, next) =>{
+    return handle(req, res);
+  });
 
-      res.status(200).send('this is where the admin panel will go!');
-    }, (err) =>{
-      console.log(err);
-    });
-  }
-});*/
+  //handle 404
+  /*server.use((req, res, next) =>{
+    var err = new Error('Page not found :(');
+    err.status = 404;
+    next(err);
+  });*/
 
-app.use('/', index);
-app.use('/install', install);
-
-//handle 404
-app.use((req, res, next) =>{
-  var err = new Error('Page not found :(');
-  err.status = 404;
-  next(err);
+  server.listen(4567, () =>{console.log('running gifter')});
 });
-
-app.listen(4567, () =>{console.log('running gifter')});
+  

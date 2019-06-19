@@ -5,7 +5,7 @@ var apiKey = process.env.API_KEY;
 var apiSecret = process.env.API_SECRET;
 const authentication = require('../middlewares/authentication.js')(apiKey, apiSecret);
 
-module.exports = (tokens) =>{
+module.exports = (tokens, app) =>{
 	/*admin panel page*/
 	router.get('/', (req, res, next) =>{
 		var shop = req.query.shop;
@@ -19,7 +19,9 @@ module.exports = (tokens) =>{
 			console.log('doing authentication');
 
 			authentication.authenticate(req, res, next).then((data) =>{
-		    res.status(200).send('<p>Admin Panel</p>');
+		    //res.status(200).send('<p>Admin Panel</p>');
+		    
+		    app.render(req, res, '/', req.query);
 		  }, (err) =>{
 		    console.log(err);
 		  });
