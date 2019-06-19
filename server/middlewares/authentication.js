@@ -31,7 +31,7 @@ module.exports = (key, secret) =>{
 			    };
 
 			    if (!hashEquals) {
-			      return reject({400: 'HMAC validation failed'});
+			      reject({400: 'HMAC validation failed'});
 			    }
 
 			    var accessTokenRequestUrl = 'https://' + shop + '/admin/oauth/access_token';
@@ -55,6 +55,38 @@ module.exports = (key, secret) =>{
 			  }
 			  else
 			  	reject({400: 'Required parameters missing'});
+			});
+		},
+
+		authenticate: function(req, res, next){
+			return new Promise((resolve, reject) =>{
+				const { shop, hmac, code, state } = req.query;
+			  const stateCookie = cookie.parse(req.headers.cookie).state;
+
+			  if(shop && hmac){
+			  	const map = Object.assign({}, req.query);
+			    delete map['signature'];
+			    delete map['hmac'];
+
+			    const message = querystring.stringify(map);
+			    const providedHmac = Buffer.from(hmac, 'utf-8');
+			    const generatedHash = Buffer.from(crypto.createHmac('sha256', secret).update(message).digest('hex'), 'utf-8');
+			    let hashEquals = false;
+
+			    try {
+			      hashEquals = crypto.timingSafeEqual(generatedHash, providedHmac)
+			    } catch (e) {
+			      hashEquals = false;
+			    };
+
+			    if (!hashEquals) {
+			      reject({400: 'HMAC validation failed'});
+			    }
+
+			    resolve();
+			  }
+			  else
+			  	reject({400: 'unknown error'});
 			});
 		}
 	}
