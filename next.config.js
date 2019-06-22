@@ -1,8 +1,9 @@
 const nextCSS = require('@zeit/next-css');
 const webpack = require('webpack');
+const withTypescript = require('@zeit/next-typescript')
 
 const apiKey =  JSON.stringify(process.env.API_KEY);
-module.exports = nextCSS({
+module.exports = nextCSS(withTypescript({
   webpack: (config) => {
     const env = { API_KEY: apiKey };
 
@@ -11,4 +12,4 @@ module.exports = nextCSS({
   },
   useFileSystemPublicRoutes: false,
   distDir: '_next'
-});
+}));
