@@ -1,30 +1,53 @@
-var Web3 = require("web3");
-var web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/"));
+var ethereumTx = require('ethereumjs-tx');
+var ethereumUtil = require('ethereumjs-util');
 
 var contracts = {
 	"CompanyFactory": {
 		"abi": "../../contracts/CompanyFactory.abi",
-		"address": "0x5c75159b92ecdf2c94cb951f00a779755d50c9a3"
+		"address": "0xa0ce319e9674778c78378369a311ec0a38008c5a"
 	}
 }
 
-module.exports = () =>{
-	//initial setup to unlock gifter eth account
-
-
-
-
+module.exports = (w3c) =>{
 	return{
-		createNewCompany: (name) => {
-			cf = new this.web3.eth.Contract(contracts["CompanyFactory"]["abi"], contracts["CompanyFactory"]["address"]);
+		createNewCompany: (name, password) => {
+			var cf = new w3c.web3.eth.Contract(contracts["CompanyFactory"]["abi"], contracts["CompanyFactory"]["address"]);
 
 			return new Promise((resolve, reject) =>{
 				if(name.length > 32)
 					reject({error: "Company name must be less than 32 characters"});
 
-				var method = cf.methods.createNewCompany(web3.utils.asciiToHex(name));
-				var trx_encode = method.encodeABI();
-				var nonce = await this.web3.eth.getTransactionCount();
+				//create a new account on the blockchain to own the company
+				w3c.createAccount(password).then((account) =>{
+					var method = cf.methods.createNewCompany(web3.utils.asciiToHex(name), account.address);
+					var trx_encode = method.encodeABI();
+
+					var trx = ethereumTx({
+		    		nonce: w3c.web3.utils.toHex(0), //nonce is 0 after account creation
+		    		from: w3c.gifterAccount.address,
+		    		to: contracts["CompanyFactory"]["address"],
+		    		data: trx_encode
+		    	});
+					trx.sign(process.env.PRIVATE_KEY);
+
+					var serializedTrx = '0x' + trx.serialize().toString('hex');
+
+					w3c.web3.eth.sendSignedTransaction(serializedTrx, (err, res) =>{
+						if(err)
+							reject(err);
+
+						resolve(res);
+					}).on('transactionHash', function(hash){
+					    console.log('hash: ' + hash);
+					}).on('receipt', function(receipt){
+					    console.log('receipt: ' + receipt);
+					}).on('confirmation', function(confirmationNumber, receipt){
+						console.log('confirmation number: ' + confirmationNumber);
+					}).on('error', console.error);
+
+				}, (err) =>{
+					reject(err);
+				});
 			});
 		}
 	}
