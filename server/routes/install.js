@@ -3,14 +3,15 @@ var nonce = require('nonce');
 var request = require('request-promise');
 var router = express.Router();
 
-var appUrl = "https://aaf3149d.ngrok.io";
+var appUrl = "https://3f128a1c.ngrok.io";
 var scopes = 'write_script_tags'
 
 var apiKey = process.env.API_KEY;
 var apiSecret = process.env.API_SECRET;
 const authentication = require('../middlewares/authentication.js')(apiKey, apiSecret);
 
-module.exports = (tokens) =>{
+module.exports = (mdb, tokens) =>{
+	let install = require('../models/install.js')(mdb);
 
 	//main install route
 	router.get('/', (req, res, next) =>{
@@ -76,8 +77,11 @@ module.exports = (tokens) =>{
 	  next();
 	  //res.redirect(appUrl + '/gifter/auth');
 	}, (req, res, next) =>{
-	  //create new company in gifter
+		var shop = req.query.shop;
+		console.log(shop);
 
+	  //create new company in gifter
+	  install.install(shop);
 
 	  next();
 	}, (req, res, next) =>{

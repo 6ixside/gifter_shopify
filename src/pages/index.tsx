@@ -5,20 +5,33 @@ import { EmptyState,
          Form,
          FormLayout,
          Tabs } from '@shopify/polaris';
-import RestProvider from '../providers/rest.provider';
+//import RestProvider from '../providers/rest.provider';
+import fetch from 'isomorphic-fetch';
 
 const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
 
 export default class Index extends React.Component{
-  constructor(props: any, public rp: RestProvider){
+  constructor(props: any){
     super(props);
 
     this.state = {
       tab: 0,
-      isEmpty: false,
+      isEmpty: true,
       companyName: '',
       password: ''
     }
+
+    this.companyExists();
+  }
+
+  public async companyExists(){
+    fetch('https://3f128a1c.ngrok.io/store/exists/', {
+      method: 'GET'
+    }).then((res) =>{
+      console.log(res);
+    }, (err) =>{
+      console.log(err);
+    });
   }
 
   public createNewCompany(){

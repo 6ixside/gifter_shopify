@@ -1,12 +1,22 @@
-import { Component } from "react";
+import * as React from "react";
 
-export default class RestProvider extends Component{
+export default class RestProvider extends React.Component{
 	constructor(props: any){
 		super(props);
 	}
 
+	public async companyExists(){
+		fetch('https://3f128a1c.ngrok.io/store/exists/', {
+			method: 'GET'
+		}).then((res) =>{
+			console.log(res);
+		}, (err) =>{
+			console.log(err);
+		});
+	}
+
 	public async createNewCompany(name: String, password: String){
-		fetch('https://aaf3149d.ngrok.io/w3/newCompany/', {
+		fetch('https://3f128a1c.ngrok.io/w3/newCompany/', {
 			method: 'POST',
 			body: JSON.stringify({
 				name: name,
@@ -18,6 +28,4 @@ export default class RestProvider extends Component{
 			console.log(err);
 		});
 	}
-
-
 }

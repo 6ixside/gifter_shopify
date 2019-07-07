@@ -15,17 +15,24 @@ var app = next({ dev,
 var handle = app.getRequestHandler();
 
 var tokens = {}
-const index = require('./server/routes/index')(tokens, app);
-const install = require('./server/routes/install')(tokens);
+const index = require('./server/routes/index')(mdb, tokens, app);
+const install = require('./server/routes/install')(mdb, tokens);
 const web3 = require('./server/routes/web3')(w3c);
-
+const store = require('./server/routes/store')(mdb);
 
 app.prepare().then(() => {
   var server = express();
 
+  server.use((req, res, next) =>{  
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });  
+
   server.use('/', index);
   server.use('/install', install);
   server.use('/w3', web3);
+  server.use('/store', store);
 
   server.get('*', (req, res, next) =>{
     return handle(req, res);
