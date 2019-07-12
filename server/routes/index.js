@@ -20,7 +20,6 @@ module.exports = (mdb, tokens, app) =>{
 			}
 			else{
 				console.log('doing authentication');
-
 				authentication.authenticate(req, res, next).then((data) =>{
 			    //res.status(200).send('<p>Admin Panel</p>');
 			    

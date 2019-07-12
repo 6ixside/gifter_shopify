@@ -6,7 +6,7 @@ export default class RestProvider extends React.Component{
 	}
 
 	public async companyExists(){
-		fetch('https://3f128a1c.ngrok.io/store/exists/', {
+		fetch('https://27228889.ngrok.io/store/exists/', {
 			method: 'GET'
 		}).then((res) =>{
 			console.log(res);
@@ -16,7 +16,7 @@ export default class RestProvider extends React.Component{
 	}
 
 	public async createNewCompany(name: String, password: String){
-		fetch('https://3f128a1c.ngrok.io/w3/newCompany/', {
+		fetch('https://27228889.ngrok.io/w3/newCompany/', {
 			method: 'POST',
 			body: JSON.stringify({
 				name: name,

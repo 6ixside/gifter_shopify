@@ -3,7 +3,7 @@ var nonce = require('nonce');
 var request = require('request-promise');
 var router = express.Router();
 
-var appUrl = "https://3f128a1c.ngrok.io";
+var appUrl = "https://ef87858d.ngrok.io";
 var scopes = 'write_script_tags'
 
 var apiKey = process.env.API_KEY;
@@ -77,19 +77,11 @@ module.exports = (mdb, tokens) =>{
 	  next();
 	  //res.redirect(appUrl + '/gifter/auth');
 	}, (req, res, next) =>{
-		var shop = req.query.shop;
-		console.log(shop);
-
-	  //create new company in gifter
-	  install.install(shop);
-
-	  next();
-	}, (req, res, next) =>{
 	  var shop = req.query.shop;
 
 	  authentication.authenticate(req, res, next).then((data) =>{
+	  	install.install(shop); //create shop in db
 	    res.status(200).send('<p>Install Complete!</p>');
-	    tokens[shop] = shop;
 	  }, (err) =>{
 	    console.log(err);
 	  });

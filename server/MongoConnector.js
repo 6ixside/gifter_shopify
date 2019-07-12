@@ -8,7 +8,6 @@ module.exports = class MongoConnector{
 		this.client = new MongoClient(uri, { useNewUrlParser: true });
 		this.client.connect().then((client) =>{
 			console.log("mongodb connected!");
-			console.log(client);
 
 			this.client = client;
 			this.db = this.client.db(db_name);

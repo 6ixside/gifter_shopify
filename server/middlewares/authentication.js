@@ -2,6 +2,9 @@ var request = require('request-promise');
 var crypto = require('crypto');
 var cookie = require('cookie');
 var querystring = require('querystring');
+var jwt = require('jsonwebtoken');
+
+var jwtkey = process.env.JWT_KEY;
 
 module.exports = (key, secret) =>{
 	return{
@@ -61,7 +64,6 @@ module.exports = (key, secret) =>{
 		authenticate: function(req, res, next){
 			return new Promise((resolve, reject) =>{
 				const { shop, hmac, code, state } = req.query;
-			  const stateCookie = cookie.parse(req.headers.cookie).state;
 
 			  if(shop && hmac){
 			  	const map = Object.assign({}, req.query);
@@ -83,10 +85,62 @@ module.exports = (key, secret) =>{
 			      reject({400: 'HMAC validation failed'});
 			    }
 
-			    resolve();
+				  var token_payload = {
+				  	shop: shop
+				  };
+
+				  var i = "6Side Co"; //isuer
+				  var s = shop.split('.')[0]; //subject
+				  var a = shop; //audience
+
+				  var sOpts = {
+				  	issuer: i,
+				  	subject: s,
+				  	audience: a,
+				  	expiresIn: "12h",
+				  	algorithm: "HS256"
+				  }
+
+				  var token = jwt.sign(token_payload, jwtkey, sOpts);
+				  res.cookie('gifter_access_token', token); //set the jwt
+
+				  resolve();
 			  }
 			  else
 			  	reject({400: 'unknown error'});
+			});
+		},
+
+		verifyToken: function(req, res, next){
+			return new Promise((resolve, reject) =>{
+				if(!req.headers.cookie)
+					reject("can't access cookie");
+
+				const shop = cookie.parse(req.headers.cookie).shopOrigin;
+				const tokenCookie = cookie.parse(req.headers.cookie).gifter_access_token;
+
+				var i = "6Side Co"; //isuer
+			  var s = shop.split('.')[0]; //subject
+			  var a = shop; //audience
+
+				var vOpts = {
+					issuer: i,
+			  	subject: s,
+			  	audience: a,
+			  	expiresIn: "12h",
+			  	algorithm: ["HS256"]
+				}
+
+				try{
+					var token_content = jwt.verify(tokenCookie, jwtkey, vOpts);
+				} catch(err){
+					reject("could not verify token");
+				}
+
+				if(shop != token_content.shop)
+					reject("shop doesn't match");
+
+				resolve();
 			});
 		}
 	}

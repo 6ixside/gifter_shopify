@@ -4,7 +4,10 @@ import { EmptyState,
          Page,
          Form,
          FormLayout,
-         Tabs } from '@shopify/polaris';
+         Tabs,
+         Modal,
+         Stack,
+         TextField } from '@shopify/polaris';
 //import RestProvider from '../providers/rest.provider';
 import fetch from 'isomorphic-fetch';
 
@@ -16,6 +19,7 @@ export default class Index extends React.Component{
 
     this.state = {
       tab: 0,
+      create_modal_flag: false,
       isEmpty: true,
       companyName: '',
       password: ''
@@ -25,25 +29,47 @@ export default class Index extends React.Component{
   }
 
   public async companyExists(){
-    fetch('https://3f128a1c.ngrok.io/store/exists/', {
+    fetch('https://ef87858d.ngrok.io/store/exists/', {
       method: 'GET'
-    }).then((res) =>{
-      console.log(res);
+    }).then(res => res.json()).then((res) =>{
+      console.log(res.exists);
+      this.setState({isEmpty: !res.exists});
     }, (err) =>{
       console.log(err);
     });
   }
 
-  public createNewCompany(){
-    //this.rp.createNewCompany()
-    console.log("new company!");
+  public async createNewCompany(e){
+    console.log("creating new company");
+    console.log(e);
+    /*fetch('https://ef87858d.ngrok.io/w3/newCompany/', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: name,
+        password: password
+      })
+    }).then((res) =>{
+      console.log(res);
+    }, (err) =>{
+      console.log(err);
+    });*/
   }
 
-  handleTabChange = (idx) => {
+  handleTabChange = (idx: number) => {
     this.setState({tab: idx});
-  };
+  }
+
+  toggleCreateCompanyModal = () =>{
+    this.setState({create_modal_flag: !this.state.create_modal_flag});
+    console.log(this.state.create_modal_flag);
+  }
+
+  closeCreateCompanyModal = () =>{
+    console.log("closing tab");
+  }
 
   render(){
+    //define tabs
     const tabs = [{
       id: 'home-tab',
       content: 'Home'
@@ -58,6 +84,7 @@ export default class Index extends React.Component{
       content: 'Account Settings'
     }];
 
+    //temporary content
     const c = {
       0: (<p>test 0</p>),
       1: (<p>test 1</p>),
@@ -65,12 +92,53 @@ export default class Index extends React.Component{
       3: (<p>test 3</p>)
     }
 
+    const create_modal_flag = this.state.create_modal_flag;
+    var name = '';
+    var password = '';
+    const create_modal = (
+      <Modal
+        open={create_modal_flag}
+        onClose={this.toggleCreateCompanyModal}
+        title="create new company"
+        primaryAction={{
+          content: 'Create New Company',
+          onAction: this.toggleCreateCompanyModal,
+        }}
+        secondaryActions={[
+          {
+            content: 'Cancel',
+            onAction: this.toggleCreateCompanyModal,
+          },
+        ]}>
+        <Modal.Section>
+          <Stack vertical>
+            <Form onSubmit={this.createNewCompany}>
+              <TextField
+                value={name}
+                onChange={()=>{}}
+                label="name"
+                helpText={<span>This is the name that your company will be known as on the blockchain</span>}
+              />
+
+              <TextField
+                value={password}
+                onChange={()=>{}}
+                label="password"
+                type="password"
+                helpText={<span>enter a secret to encrypt your blockchain account</span>}
+              />
+            </Form>
+          </Stack>
+        </Modal.Section>
+    </Modal>
+    );
+
     const gifter_content = this.state.isEmpty ? (
       <EmptyState
         heading="Welcome to Shopify Gifter"
         action={{
           content: 'Setup Gifter',
-          onAction: () => console.log('clicked'),
+          onAction: () => this.toggleCreateCompanyModal(),
         }}
         image={img}
       >
@@ -91,6 +159,7 @@ export default class Index extends React.Component{
       <Page title="" fullWidth>
         <Layout>
           <Layout.Section>
+            {create_modal}
             {gifter_content}
           </Layout.Section>
         </Layout>
