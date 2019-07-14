@@ -1,17 +1,17 @@
 var Web3 = require("web3"); 
-var helpers = require("./helpers");
+var helpers = require("./helpers")();
 
 module.exports = class Web3Connector{
 	constructor(opts = {}){
 		this.web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/"), null, opts);
 		this.web3.eth.net.isListening().then((active) =>{
-			console.log(active);
-
 			if(!active)
 				throw new Error('Could not connect to provider');
 
-			this.gifterAccount = this.web3.eth.accounts.privateKeyToAccount(process.env.PRIVATE_KEY);
+			this.gifterAccount = this.web3.eth.accounts.privateKeyToAccount("0x" + process.env.PRIVATE_KEY);
 			this.gifterAccount.privateKey = null;
+
+			console.log(this.gifterAccount.address);
 		});
 	}
 
@@ -27,9 +27,10 @@ module.exports = class Web3Connector{
 				password
 			);
 
-			//TODO: take encryption and store it as a blob in db
-
-			resolve(account);
+			resolve({
+				account: account,
+				encrypt: encrypt
+			});
 		});
 	}
 

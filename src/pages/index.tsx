@@ -9,11 +9,16 @@ import { EmptyState,
          Stack,
          TextField } from '@shopify/polaris';
 //import RestProvider from '../providers/rest.provider';
-import fetch from 'isomorphic-fetch';
+import { RestProvider } from '../providers/rest.provider';
+
+//custom components imports
+import { CreateCompanyModal } from './create-company/create-company';
 
 const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
 
 export default class Index extends React.Component{
+  public rp = new RestProvider();
+
   constructor(props: any){
     super(props);
 
@@ -25,34 +30,11 @@ export default class Index extends React.Component{
       password: ''
     }
 
-    this.companyExists();
-  }
-
-  public async companyExists(){
-    fetch('https://ef87858d.ngrok.io/store/exists/', {
-      method: 'GET'
-    }).then(res => res.json()).then((res) =>{
-      console.log(res.exists);
+    this.rp.companyExists().then((res) =>{
       this.setState({isEmpty: !res.exists});
     }, (err) =>{
       console.log(err);
     });
-  }
-
-  public async createNewCompany(e){
-    console.log("creating new company");
-    console.log(e);
-    /*fetch('https://ef87858d.ngrok.io/w3/newCompany/', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: name,
-        password: password
-      })
-    }).then((res) =>{
-      console.log(res);
-    }, (err) =>{
-      console.log(err);
-    });*/
   }
 
   handleTabChange = (idx: number) => {
@@ -61,7 +43,6 @@ export default class Index extends React.Component{
 
   toggleCreateCompanyModal = () =>{
     this.setState({create_modal_flag: !this.state.create_modal_flag});
-    console.log(this.state.create_modal_flag);
   }
 
   closeCreateCompanyModal = () =>{
@@ -88,50 +69,13 @@ export default class Index extends React.Component{
     const c = {
       0: (<p>test 0</p>),
       1: (<p>test 1</p>),
+
       2: (<p>test 2</p>),
       3: (<p>test 3</p>)
     }
 
     const create_modal_flag = this.state.create_modal_flag;
-    var name = '';
-    var password = '';
-    const create_modal = (
-      <Modal
-        open={create_modal_flag}
-        onClose={this.toggleCreateCompanyModal}
-        title="create new company"
-        primaryAction={{
-          content: 'Create New Company',
-          onAction: this.toggleCreateCompanyModal,
-        }}
-        secondaryActions={[
-          {
-            content: 'Cancel',
-            onAction: this.toggleCreateCompanyModal,
-          },
-        ]}>
-        <Modal.Section>
-          <Stack vertical>
-            <Form onSubmit={this.createNewCompany}>
-              <TextField
-                value={name}
-                onChange={()=>{}}
-                label="name"
-                helpText={<span>This is the name that your company will be known as on the blockchain</span>}
-              />
-
-              <TextField
-                value={password}
-                onChange={()=>{}}
-                label="password"
-                type="password"
-                helpText={<span>enter a secret to encrypt your blockchain account</span>}
-              />
-            </Form>
-          </Stack>
-        </Modal.Section>
-    </Modal>
-    );
+    const create_modal = (<CreateCompanyModal create_modal_flag={create_modal_flag} toggle={this.toggleCreateCompanyModal}/>);
 
     const gifter_content = this.state.isEmpty ? (
       <EmptyState

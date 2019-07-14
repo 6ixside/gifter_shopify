@@ -1,31 +1,34 @@
 import * as React from "react";
+import fetch from 'isomorphic-fetch';
 
-export default class RestProvider extends React.Component{
-	constructor(props: any){
-		super(props);
-	}
-
-	public async companyExists(){
-		fetch('https://27228889.ngrok.io/store/exists/', {
-			method: 'GET'
-		}).then((res) =>{
-			console.log(res);
-		}, (err) =>{
-			console.log(err);
+export class RestProvider extends React.Component{
+	public companyExists(){
+		return new Promise((resolve, reject) =>{
+			fetch('https://998c6b95.ngrok.io/store/exists/', {
+				method: 'GET'
+			}).then((res) =>{
+				resolve(res);
+			}, (err) =>{
+				reject(err);
+			});
 		});
 	}
 
-	public async createNewCompany(name: String, password: String){
-		fetch('https://27228889.ngrok.io/w3/newCompany/', {
-			method: 'POST',
-			body: JSON.stringify({
-				name: name,
-				password: password
-			})
-		}).then((res) =>{
-			console.log(res);
-		}, (err) =>{
-			console.log(err);
+	public createNewCompany(name: String, password: String){
+		return new Promise((resolve, reject) =>{
+			fetch('https://998c6b95.ngrok.io/w3/newCompany/', {
+				method: 'POST',
+				credentials: "include",
+				body: JSON.stringify({
+					name: name,
+					password: password
+				}),
+				headers: {'Content-Type': 'application/json'}
+			}).then((res) =>{
+				resolve(res);
+			}, (err) =>{
+				reject(err);
+			});
 		});
 	}
 }

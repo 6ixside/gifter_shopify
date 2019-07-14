@@ -25,14 +25,5 @@ module.exports = (mdb) =>{
 		});
 	});
 
-	router.post('/newCompany', (req, res, next) =>{
-		authentication.verifyToken(req, res, next).then(() =>{
-
-		}, (err) =>{
-			console.log(err);
-			res.status(501).send();
-		});
-	});
-
 	return router;
 }

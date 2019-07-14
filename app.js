@@ -17,12 +17,13 @@ var handle = app.getRequestHandler();
 var tokens = {}
 const index = require('./server/routes/index')(mdb, tokens, app);
 const install = require('./server/routes/install')(mdb, tokens);
-const web3 = require('./server/routes/web3')(w3c);
+const web3 = require('./server/routes/web3')(mdb, w3c);
 const store = require('./server/routes/store')(mdb);
 
 app.prepare().then(() => {
   var server = express();
 
+  server.use(express.json());
   server.use((req, res, next) =>{  
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
