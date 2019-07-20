@@ -4,7 +4,7 @@ import fetch from 'isomorphic-fetch';
 export class RestProvider extends React.Component{
 	public companyExists(){
 		return new Promise((resolve, reject) =>{
-			fetch('https://998c6b95.ngrok.io/store/exists/', {
+			fetch(process.env.NGROK + '/store/exists/', {
 				method: 'GET'
 			}).then((res) =>{
 				resolve(res);
@@ -16,7 +16,7 @@ export class RestProvider extends React.Component{
 
 	public createNewCompany(name: String, password: String){
 		return new Promise((resolve, reject) =>{
-			fetch('https://998c6b95.ngrok.io/w3/newCompany/', {
+			fetch(process.env.NGROK + '/w3/newCompany/', {
 				method: 'POST',
 				credentials: "include",
 				body: JSON.stringify({

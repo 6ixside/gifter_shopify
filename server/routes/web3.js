@@ -28,9 +28,9 @@ module.exports = (mdb, w3c) =>{
 		authentication.verifyToken(req, res, next).then(() =>{
 			console.log("creating company");
 
-			transaction.createNewCompany(shop, req.body.name, req.body.password).then((receipt) =>{
+			transaction.createNewCompany(shop, req.body.name, req.body.password).then((hash) =>{
 				console.log("company created successfully");
-				console.log(receipt);
+				console.log(hash);
 				return res.status(200).send();
 			}, (err) =>{
 				console.log(err);

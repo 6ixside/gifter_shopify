@@ -84,5 +84,22 @@
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "contractAddress",
+				"type": "address"
+			}
+		],
+		"name": "newCompany",
+		"type": "event"
 	}
 ]

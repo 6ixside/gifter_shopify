@@ -3,7 +3,7 @@ var nonce = require('nonce');
 var request = require('request-promise');
 var router = express.Router();
 
-var appUrl = "https://998c6b95.ngrok.io";
+var appUrl = process.env.NGROK;
 var scopes = 'write_script_tags'
 
 var apiKey = process.env.API_KEY;

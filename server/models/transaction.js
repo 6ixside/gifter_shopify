@@ -10,7 +10,7 @@ var pk = new Buffer.from(process.env.PRIVATE_KEY, "hex");
 var contracts = {
 	"CompanyFactory": {
 		"abi": JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../contracts/CompanyFactory.abi"))),
-		"address": "0xa0ce319e9674778c78378369a311ec0a38008c5a"
+		"address": "0xd4385753e659a78a49aa70fcb42f7177bba2c616"
 	}
 } 
 
@@ -30,30 +30,39 @@ module.exports = (mdb, w3c) =>{
 					var encrypt = data.encrypt;
 
 					var i = "6Side Co"; //isuer
-				  var s = url.split('.')[0]; //subject
-				  var a = url; //audience
+				  	var s = url.split('.')[0]; //subject
+					  var a = url; //audience
 
-				  //no expiry
-				  var opts = {
-				  	issuer: i,
-				  	subject: s,
-				  	audience: a,
-				  	algorithm: "HS256"
-				  }
+				  	//no expiry
+				  	var opts = {
+				  		issuer: i,
+				  		subject: s,
+				  		audience: a,
+				  		algorithm: "HS256"
+				  	}
 
-				  //storing in db as a jwt for ease, todo for future will be to make this better
-				  var encrypt_token = jwt.sign(encrypt, jwtkey, opts);
-
-					company_collection.updateOne(
-						{url: url},
-						{$set: {
-							address: account.address,
-							account: encrypt_token
-						}
-					});
-
+				   //storing in db as a jwt for ease, todo for future will be to make this better
+				   var encrypt_token = jwt.sign(encrypt, jwtkey, opts);
 					var method = cf.methods.createNewCompany(w3c.web3.utils.asciiToHex(name), account.address);
 					var trx_encode = method.encodeABI();
+
+					//create an event listener to listen to company creation events
+					var companyListener = cf.events.newCompany().on("data", (t) =>{
+						let address = t.returnValues.owner;
+						let company = t.returnValues.contractAddress;
+
+						console.log("company created");
+						company_collection.updateOne(
+							{url: url},
+							{$set: {
+								address: address,
+								companyAddress: company,
+								account: encrypt_token
+							}
+						});
+					}).on("error", (e) =>{
+						console.log("error creating company");
+					});
 
 					w3c.web3.eth.getTransactionCount(w3c.gifterAccount.address).then(c =>{
 						console.log("transaction count: " + c);
@@ -75,11 +84,12 @@ module.exports = (mdb, w3c) =>{
 
 						w3c.web3.eth.sendSignedTransaction(serializedTrx).on('transactionHash', function(hash){
 					    console.log('hash: ' + hash);
+					    resolve(hash);
 						}).on('receipt', function(receipt){
-					    console.log('receipt: ' + receipt);
-					    resolve(receipt);
+					    //console.log('receipt: ' + receipt);
+					    //resolve(receipt);
 						}).on('confirmation', function(confirmationNumber){
-							console.log('confirmation number: ' + confirmationNumber);
+							//console.log('confirmation number: ' + confirmationNumber);
 						}).on('error', function(e){
 							reject(e);
 						});

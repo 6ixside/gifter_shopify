@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@shopify/app-bridge-react": "^1.6.6",
-    "@shopify/polaris": "^3.18.0",
+    "@shopify/polaris": "^3.20.0",
     "@types/isomorphic-fetch": "0.0.35",
     "@types/js-cookie": "^2.2.2",
     "@types/next": "^8.0.5",

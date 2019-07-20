@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { AppProvider } from '@shopify/polaris';
 import '@shopify/polaris/styles.css';
 import Cookies from 'js-cookie';
-//import { Provider } from '@shopify/app-bridge-react';
+import { Provider } from '@shopify/app-bridge-react';
 
 class GifterApp extends App {
   state = {
@@ -14,7 +14,7 @@ class GifterApp extends App {
   render() {
     console.log(Cookies.get('shopOrigin'));
     const { Component, pageProps } = this.props;
-    //const config = {apiKey: process.env.API_KEY ? process.env.API_KEY : '', shopOrigin: this.state.shopOrigin ? this.state.shopOrigin : ''};
+    const config = {apiKey: process.env.API_KEY ? process.env.API_KEY : '', shopOrigin: this.state.shopOrigin ? this.state.shopOrigin : ''};
 
     return (
       <React.Fragment>
@@ -27,11 +27,11 @@ class GifterApp extends App {
         </Provider>*/}
 
         <AppProvider
-          shopOrigin={this.state.shopOrigin}
-          apiKey={process.env.API_KEY}
           forceRedirect
           >
-          <Component {...pageProps} />
+          <Provider config={config}>
+            <Component {...pageProps} />
+          </Provider>
         </AppProvider>
       </React.Fragment>
     );

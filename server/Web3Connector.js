@@ -3,7 +3,7 @@ var helpers = require("./helpers")();
 
 module.exports = class Web3Connector{
 	constructor(opts = {}){
-		this.web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/"), null, opts);
+		this.web3 = new Web3(new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws"), null, opts);
 		this.web3.eth.net.isListening().then((active) =>{
 			if(!active)
 				throw new Error('Could not connect to provider');

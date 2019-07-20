@@ -13,6 +13,7 @@ import { RestProvider } from '../providers/rest.provider';
 
 //custom components imports
 import { CreateCompanyModal } from './create-company/create-company';
+import { ManageCardsPage } from './manage-cards/manage-cards';
 
 const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
 
@@ -30,7 +31,8 @@ export default class Index extends React.Component{
       password: ''
     }
 
-    this.rp.companyExists().then((res) =>{
+    //check if the company exists
+    this.rp.companyExists().then(res=>res.json()).then((res) =>{
       this.setState({isEmpty: !res.exists});
     }, (err) =>{
       console.log(err);
@@ -68,8 +70,7 @@ export default class Index extends React.Component{
     //temporary content
     const c = {
       0: (<p>test 0</p>),
-      1: (<p>test 1</p>),
-
+      1: (<ManageCardsPage />),
       2: (<p>test 2</p>),
       3: (<p>test 3</p>)
     }

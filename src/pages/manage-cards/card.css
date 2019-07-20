@@ -1,0 +1,45 @@
+.Polaris-Icon{
+	display: block;
+    height: 7rem;
+    width: 7rem;
+    margin-top: 2em !important;
+    max-height: 100%;
+    max-width: 100%;
+    margin: auto;
+}
+
+.cardContainerCSS{
+	display: inline-block;
+	width: 20em;
+	height: 12em;
+	margin: 0.3em;
+	border: 1px solid #DFE3E8;
+	background-color: #FFFFFF;
+}
+
+.cardContainerCSS:hover{
+	background-color: #F4F6F8;
+}
+
+.cardCSS{
+	padding: 0.5em;
+	margin: 0.4em;
+	height: 11.2em;
+	border: 2px solid #C4CDD5;
+	border-radius: 25px;
+}
+
+.cardContent{
+	position: relative;
+	height: 8em;
+}
+
+.cardTextContainer{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
+.cardText{
+	text-align: center;
+}
