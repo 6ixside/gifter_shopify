@@ -15,10 +15,16 @@ var app = next({ dev,
 var handle = app.getRequestHandler();
 
 var tokens = {}
+
+//routes
 const index = require('./server/routes/index')(mdb, tokens, app);
 const install = require('./server/routes/install')(mdb, tokens);
 const web3 = require('./server/routes/web3')(mdb, w3c);
 const store = require('./server/routes/store')(mdb);
+
+//webhooks
+const orders = require('./server/webhooks/orders')();
+
 
 app.prepare().then(() => {
   var server = express();
@@ -30,10 +36,14 @@ app.prepare().then(() => {
     next();
   });  
 
+  //routes
   server.use('/', index);
   server.use('/install', install);
   server.use('/w3', web3);
   server.use('/store', store);
+
+  //webhooks
+  server.use('/webhooks/orders', orders);
 
   server.get('*', (req, res, next) =>{
     return handle(req, res);

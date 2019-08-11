@@ -1,5 +1,51 @@
 [
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "name",
+				"type": "bytes32"
+			},
+			{
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "createNewCompany",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "contractAddress",
+				"type": "address"
+			}
+		],
+		"name": "newCompany",
+		"type": "event"
+	},
+	{
 		"constant": true,
 		"inputs": [
 			{
@@ -7,11 +53,11 @@
 				"type": "address"
 			}
 		],
-		"name": "owners",
+		"name": "exists",
 		"outputs": [
 			{
 				"name": "",
-				"type": "address"
+				"type": "bool"
 			}
 		],
 		"payable": false,
@@ -38,29 +84,6 @@
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "name",
-				"type": "bytes32"
-			},
-			{
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "createNewCompany",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"constant": true,
 		"inputs": [
 			{
@@ -68,38 +91,15 @@
 				"type": "address"
 			}
 		],
-		"name": "exists",
+		"name": "owners",
 		"outputs": [
 			{
 				"name": "",
-				"type": "bool"
+				"type": "address"
 			}
 		],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "contractAddress",
-				"type": "address"
-			}
-		],
-		"name": "newCompany",
-		"type": "event"
 	}
 ]

@@ -17,15 +17,13 @@ export class Card extends React.Component{
 		};
 	}
 
-	public createNewCard(){
-
-	}
-
 	render(){
+		var toggle = this.props.toggle;
+
 		const content = this.props.default ? (
-			<div className="cardContent" onClick={this.createNewCard}>
+			<div className="cardContent" onClick={toggle}>
 				<div>
-					<Icon source={CirclePlusMinor} color="indigo" />
+					<Icon className="cardIcon" source={CirclePlusMinor} color="indigo" />
 				</div>
 				<div className="cardTextContainer">
 					<p className="cardText">Create New Card</p>

@@ -34,6 +34,11 @@ module.exports = class Web3Connector{
 		});
 	}
 
+	//decrypt the account
+	decryptAccount(account, password){
+		return this.web3.eth.accounts.decrypt(account, password);
+	}
+
 	//default unlock for 2 minutes
 	unlockAccount(account = null, pk = null, duration = 120){
 		return new Promise((resolve, reject) =>{

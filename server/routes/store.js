@@ -1,5 +1,6 @@
 var express = require('express');
 var cookie = require('cookie');
+var request = require('request-promise');
 var router = express.Router();
 
 var apiKey = process.env.API_KEY;
@@ -9,6 +10,7 @@ const authentication = require('../middlewares/authentication.js')(apiKey, apiSe
 module.exports = (mdb) =>{
 	let company = require('../models/company.js')(mdb);
 
+	//check that the company address exists in db
 	router.get('/exists', (req, res, next) =>{
 		authentication.verifyToken(req, res, next).then(() =>{
 			var shop = cookie.parse(req.headers.cookie).shopOrigin;

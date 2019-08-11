@@ -31,4 +31,22 @@ export class RestProvider extends React.Component{
 			});
 		});
 	}
+
+	public createNewCard(title: String, value: String, desc: String){
+		return new Promise((resolve, reject) =>{
+			fetch(process.env.NGROK + '/w3/newCard', {
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify({
+					title: title,
+					value: value,
+					desc: desc
+				})
+			}).then((res) =>{
+				resolve(res);
+			}, (err) =>{
+				reject(err);
+			});
+		});
+	}
 }

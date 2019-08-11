@@ -89,7 +89,7 @@ module.exports = (key, secret) =>{
 				  	shop: shop
 				  };
 
-				  var i = "6Side Co"; //isuer
+				  var i = "6sidecontracting@gmail.com"; //isuer
 				  var s = shop.split('.')[0]; //subject
 				  var a = shop; //audience
 
@@ -119,7 +119,7 @@ module.exports = (key, secret) =>{
 				const shop = cookie.parse(req.headers.cookie).shopOrigin;
 				const tokenCookie = cookie.parse(req.headers.cookie).gifter_access_token;
 
-				var i = "6Side Co"; //isuer
+				var i = "6sidecontracting@gmail.com"; //isuer
 			  var s = shop.split('.')[0]; //subject
 			  var a = shop; //audience
 
