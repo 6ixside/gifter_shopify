@@ -17,6 +17,8 @@ module.exports = (mdb) =>{
 
 			//get shop existance status
 			company.exists(shop).then((exists) =>{
+				console.log("**HERE**");
+				console.log(exists);
 				res.status(200).json({exists: exists});
 			}, (err) =>{
 				res.status(501).send();

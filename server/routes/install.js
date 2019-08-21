@@ -1,4 +1,5 @@
 var express = require('express');
+var path = require('path');
 var nonce = require('nonce');
 var request = require('request-promise');
 var router = express.Router();
@@ -49,6 +50,8 @@ module.exports = (mdb, tokens) =>{
 				console.log(err);
 			});
 
+			console.log(tokens[shop]);
+
 			let headers = {
 				'X-Shopify-Access-Token': tokens[shop]
 			}
@@ -56,28 +59,52 @@ module.exports = (mdb, tokens) =>{
 			let body = {
 			  "script_tag": {
 			    "event": 'onload',
-			    "src": appUrl + '/install/test'
+			    "src": appUrl + '/install/scripts'
 			  }
 			}
 
-			request.post({
+			//uncomment to reinstall script tag
+			/*request.post({
 			  url: scriptTagUrl,
 			  headers: headers,
 			  body: body,
 			  json: true
 			}).then((shopRes) => {
-			  request.get({
-			    url: 'https://' + shop + '/admin/script_tags.json',
-			    headers: headers
-			  }).then((data) => {/*console.log(data);*/})
+				console.log("script tag installed");
+
+			  //request.get({
+			  //  url: 'https://' + shop + '/admin/script_tags.json',
+			  //  headers: headers
+			  //}).then((data) => {console.log(data);})
 			}, (err) =>{
 			  console.log('error: ' + err);
-			});
+			});*/
+
+			//uncomment to delete all tags
+			/*request.get({
+		    url: 'https://' + shop + '/admin/script_tags.json',
+		    headers: headers
+			}).then(async (tags) =>{
+				console.log(tags);
+
+				
+				for(t of JSON.parse(tags)["script_tags"]){
+					var url = 'https://' + shop + '/admin/api/2019-07/script_tags/' + t.id + '.json';
+
+					await request.delete({
+						url: url,
+						headers: headers
+					}).then(() => {console.log("deleted");}, (err) =>{
+						console.log("could not delete: " + url);
+					});
+				}
+			});*/
+
 		}
 
 	  next();
 	  //res.redirect(appUrl + '/gifter/auth');
-	}, (req, res, next) =>{
+	}, async (req, res, next) =>{
 		//install all webhooks
 		var shop = req.query.shop;
 		console.log(shop);
@@ -87,35 +114,53 @@ module.exports = (mdb, tokens) =>{
 			'X-Shopify-Access-Token': tokens[shop]
 		}
 
-		let body = {
-			'webhook': {
-				"topic": 'orders/create',
-				"address": appUrl + '/webhooks/orders/create',
-				"format": 'json'
+		let topics = ['orders/create', 
+									'carts/create',
+									'carts/update', 
+									'checkouts/create',
+									'checkouts/update'];
+
+		//uncomment to reinstall webhooks
+		/*for(t of topics){
+			var body = {
+				'webhook': {
+					"topic": t,
+					"address": appUrl + '/webhooks/' + t,
+					"format": 'json'
+				}
 			}
-		}
 
-		request.post({
-			url: webhookUrl,
-			headers: headers,
-			body: body,
-			json: true
-		}).then((shopRes) =>{
-			console.log(shopRes);
-		}, (err) =>{
-			console.log("could not create webhook :(");
-			console.log(err);
-
-			/*request.get({
-				url: 'https://' + shop + '/admin/api/2019-07/webhooks.json',
-				headers: headers
-			}).then(data => {console.log(data);})*/
-
-			request.delete({
-				url: 'https://' + shop + '/admin/api/2019-07/webhooks/656990568553.json',
-				headers: headers
+			await request.post({
+				url: webhookUrl,
+				headers: headers,
+				body: body,
+				json: true
+			}).then((shopRes) =>{
+				console.log(shopRes);
+			}, (err) =>{
+				console.log("could not create webhook :(");
+				console.log(err);
 			});
-		});
+		}*/
+
+		//uncomment to delete all webhooks
+		/*request.get({
+			url: 'https://' + shop + '/admin/api/2019-07/webhooks.json',
+			headers: headers
+		}).then(async (hooks) =>{
+			console.log(hooks);
+
+			for(h of JSON.parse(hooks)['webhooks']){
+				var url = 'https://' + shop + '/admin/api/2019-07/webhooks/' + h.id + '.json';
+
+				await request.delete({
+					url: url,
+					headers: headers
+				}).then(() => {console.log("deleted");}, (err) =>{
+					console.log("could not delete: " + url);
+				});
+			}
+		});*/
 
 		next();
 	}, (req, res, next) =>{
@@ -128,6 +173,10 @@ module.exports = (mdb, tokens) =>{
 	    console.log(err);
 	  });
 	  
+	});
+
+	router.get('/scripts', (req, res, next) =>{
+		res.sendFile(path.resolve(__dirname + './../../public/gifter_redeem.js'));
 	});
 
 	return router;

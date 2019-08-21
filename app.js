@@ -24,6 +24,8 @@ const store = require('./server/routes/store')(mdb);
 
 //webhooks
 const orders = require('./server/webhooks/orders')();
+const carts = require('./server/webhooks/carts')();
+const checkouts = require('./server/webhooks/checkouts')();
 
 
 app.prepare().then(() => {
@@ -44,6 +46,8 @@ app.prepare().then(() => {
 
   //webhooks
   server.use('/webhooks/orders', orders);
+  server.use('/webhooks/carts', carts);
+  server.use('/webhooks/checkouts', checkouts);
 
   server.get('*', (req, res, next) =>{
     return handle(req, res);

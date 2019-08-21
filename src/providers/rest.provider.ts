@@ -9,6 +9,7 @@ export class RestProvider extends React.Component{
 			}).then((res) =>{
 				resolve(res);
 			}, (err) =>{
+				console.log("exists error");
 				reject(err);
 			});
 		});
