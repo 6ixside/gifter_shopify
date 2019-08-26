@@ -64,7 +64,7 @@ module.exports = (mdb, tokens) =>{
 			}
 
 			//uncomment to reinstall script tag
-			/*request.post({
+			request.post({
 			  url: scriptTagUrl,
 			  headers: headers,
 			  body: body,
@@ -78,7 +78,7 @@ module.exports = (mdb, tokens) =>{
 			  //}).then((data) => {console.log(data);})
 			}, (err) =>{
 			  console.log('error: ' + err);
-			});*/
+			});
 
 			//uncomment to delete all tags
 			/*request.get({
@@ -121,7 +121,7 @@ module.exports = (mdb, tokens) =>{
 									'checkouts/update'];
 
 		//uncomment to reinstall webhooks
-		/*for(t of topics){
+		for(t of topics){
 			var body = {
 				'webhook': {
 					"topic": t,
@@ -136,12 +136,12 @@ module.exports = (mdb, tokens) =>{
 				body: body,
 				json: true
 			}).then((shopRes) =>{
-				console.log(shopRes);
+				console.log("webhook topic: " + t + ' created successfully');
 			}, (err) =>{
 				console.log("could not create webhook :(");
 				console.log(err);
 			});
-		}*/
+		}
 
 		//uncomment to delete all webhooks
 		/*request.get({

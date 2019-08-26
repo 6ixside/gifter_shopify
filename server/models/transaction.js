@@ -112,9 +112,22 @@ module.exports = (mdb, w3c) =>{
 
 		createNewCard: (account, company_address, card) =>{
 			return new Promise((resolve, reject) =>{
+				var card_collection = mdb.db.collection('giftcards');
 				var company = new w3c.web3.eth.Contract(contracts["Company"]["abi"], company_address);
 				var method = company.methods.createNewCard(card.value, 1); //TODO, implement tradibility
 				var trx_encode = method.encodeABI();
+
+				var cardListener = company.events.newCard().on("data", (t) =>{
+					let position = t.returnValues.position;
+
+					console.log("card created");
+					card_collection.updateOne(
+						{shopifyId: card.id},
+						{$set: {
+							position: position
+						}
+					});
+				});
 
 				w3c.web3.eth.getTransactionCount(account.address).then(c =>{
 					console.log("transaction count: " + c);

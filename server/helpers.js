@@ -5,6 +5,10 @@ module.exports = () =>{
 			return true;
 		},
 
+		sendGiftCard: (contents) =>{
+
+		},
+
 		generateSecret: () =>{
 			let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 			let length = 20;

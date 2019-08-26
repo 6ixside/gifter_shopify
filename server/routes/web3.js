@@ -9,6 +9,7 @@ var apiSecret = process.env.API_SECRET;
 const authentication = require('../middlewares/authentication.js')(apiKey, apiSecret);
 
 module.exports = (mdb, w3c) =>{
+	let giftcards = require('../models/giftcards.js')(mdb);
 	let company = require('../models/company.js')(mdb);
 	let transaction = require('../models/transaction.js')(mdb, w3c);
 
@@ -97,11 +98,20 @@ module.exports = (mdb, w3c) =>{
 					headers: headers,
 					body: body,
 					json: true
-				}).then((shopRes) =>{
+				}).then(async (shopRes) =>{
 					console.log(shopRes);
+					card.id = shopRes.product.id;
+
+					//add card to db
+					await giftcards.addCard(shop, card.id, card.value).then(() =>{
+						console.log("card referrenced successfully");
+					}, (err) =>{
+						console.log(err);
+						throw new Error("Could not create card reference");
+					});
 
 					//decrypt the bc account
-					account = w3c.decryptAccount(comp.account, 'mytestpass');
+					account = await w3c.decryptAccount(comp.account, 'mytestpass');
 
 					if(account.address != comp.address){
 						console.log("company account mismatch!!");
@@ -124,6 +134,17 @@ module.exports = (mdb, w3c) =>{
 			});
 		});
 	});
+
+	router.post('/redeem-card', (req, res, next) =>{
+		//var shop = req.body.shop;
+		//var code = req.body.code;
+
+		console.log('redeeming');
+		console.log(req.body);
+
+		res.status(200).send();
+	});
+
 
 	//would this be a webhook?
 	router.post('/purchaseEmail', (req, res, next) =>{
