@@ -92,7 +92,7 @@ function appendRedeem(){
 		console.log(data);
 
 		$.ajax({
-			url: 'https://49ab0e8a.ngrok.io/w3/redeem-card',
+			url: 'https://d4b99d50.ngrok.io/w3/redeem-card',
 			type: 'POST',
 			data: JSON.stringify(data),
 			contentType: 'application/json',

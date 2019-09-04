@@ -42,13 +42,13 @@ module.exports = (mdb) =>{
 		},
 
 		//apply gift cards to current cart
-		applyGiftCard: (cartToken) =>{
+		applyGiftCard: (cartToken, code) =>{
 			var card_collection = mdb.db.collection('appliedcards');
 
 			return new Promise((resolve, reject) =>{
 				card_collection.insertOne({
 					cartToken: cartToken,
-					code: 'ErQHbcDCNkSuHkgqXnxs',
+					code: code,
 					val: 25
 				}).then(() =>{
 					resolve();

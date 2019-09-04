@@ -1,0 +1,363 @@
+[
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_owner",
+				"type": "address"
+			},
+			{
+				"name": "offset",
+				"type": "uint16"
+			}
+		],
+		"name": "getInventory",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bytes32[]"
+			},
+			{
+				"name": "",
+				"type": "uint256[]"
+			},
+			{
+				"name": "",
+				"type": "uint256[]"
+			},
+			{
+				"name": "",
+				"type": "uint256[]"
+			},
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "inventories",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "trades",
+		"outputs": [
+			{
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"name": "tradeDna",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "openTrades",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"name": "tradeId",
+				"type": "uint256"
+			},
+			{
+				"name": "status",
+				"type": "uint256"
+			},
+			{
+				"name": "v",
+				"type": "uint8[]"
+			},
+			{
+				"name": "r",
+				"type": "bytes32[]"
+			},
+			{
+				"name": "s",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "resolveTrade",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "consumer",
+				"type": "address"
+			},
+			{
+				"name": "companyAddress",
+				"type": "address"
+			},
+			{
+				"name": "cardPosition",
+				"type": "uint16"
+			},
+			{
+				"name": "v",
+				"type": "uint8[]"
+			},
+			{
+				"name": "r",
+				"type": "bytes32[]"
+			},
+			{
+				"name": "s",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "purchaseCard",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"name": "isGift",
+				"type": "uint256"
+			},
+			{
+				"name": "fromTrades",
+				"type": "uint16[]"
+			},
+			{
+				"name": "toTrades",
+				"type": "uint16[]"
+			},
+			{
+				"name": "v",
+				"type": "uint8[]"
+			},
+			{
+				"name": "r",
+				"type": "bytes32[]"
+			},
+			{
+				"name": "s",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "initiateTrade",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "secret",
+				"type": "bytes32"
+			}
+		],
+		"name": "getEmailedCard",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "initiator",
+				"type": "address"
+			},
+			{
+				"name": "companyAddress",
+				"type": "address"
+			},
+			{
+				"name": "cardPosition",
+				"type": "uint16"
+			},
+			{
+				"name": "secret",
+				"type": "bytes32"
+			},
+			{
+				"name": "v",
+				"type": "uint8[]"
+			},
+			{
+				"name": "r",
+				"type": "bytes32[]"
+			},
+			{
+				"name": "s",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "purchaseCardEmail",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "nonceSet",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "a",
+				"type": "address"
+			},
+			{
+				"name": "b",
+				"type": "address"
+			}
+		],
+		"name": "getNonce",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "bytes32"
+			}
+		],
+		"name": "emailCards",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "a",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [],
+		"name": "emailPurchase",
+		"type": "event"
+	}
+]

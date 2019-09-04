@@ -1,41 +1,66 @@
 var express = require('express');
 var cookie = require('cookie');
+var crypto = require('crypto');
 var request = require('request-promise');
-var helpers = require('../helpers');
+var helpers = require('../helpers')();
 var router = express.Router();
 
-module.exports = (mdb) =>{
+module.exports = (mdb, w3c) =>{
 
-	router.post('/create', async (req, res) =>{
+	router.post('/create', (req, res) =>{
 		console.log("checkout paid!");
-		let giftcards = require('../models/giftcards.js');
-		let transaction = require('../models/transaction.js');
+		let company = require('../models/company.js')(mdb);
+		let giftcards = require('../models/giftcards.js')(mdb);
+		let transaction = require('../models/transaction.js')(mdb, w3c);
 
 		console.log(req.get('X-Shopify-Hmac-Sha256'));
 		console.log(req.body);
 
+		let shop = req.get('X-Shopify-Shop-Domain');
 		let lineItems = req.body.line_items;
 		let customerEmail = req.body.email;
 
-		for(item of lineItems){
-			let id = item.id;
+		company.getCompany(shop).then(async (comp) =>{
+			for(item of lineItems){
+				let id = item.product_id;
 
-			await giftcards.getCardById(id).then((card) =>{
-				if(card){
-					console.log("gifter card purchased");
+				console.log(id);
 
-					//create card on blockchain
+				await giftcards.getCardById(id).then((card) =>{
+					if(card){
+						console.log("gifter card purchased");
 
-					//email giftcard to user
+						let position = card.position;
+						let secret = helpers.generateSecret();
+						let generatedHash = crypto.createHash('sha256').update(secret + shop).digest('hex').substr(0, 32);
 
-				}
-			}, (err) =>{
-				console.log(err);
-				res.status(400).send();
-			})
-		}
+						//create card on blockchain
+						transaction.purchaseCardEmail(comp.companyAddress, comp.address, position, generatedHash).then((hash) =>{
+							console.log('hash: ' + hash);
 
-		res.status(200).send();
+							//email gift card
+							helpers.sendGiftCard({
+								email: customerEmail,
+								code: secret
+							});
+
+							res.status(200).send();
+						}, (err) =>{
+							console.log(err);
+							res.status(500).send();
+						});
+					}
+				}, (err) =>{
+					console.log(err);
+					res.status(400).send();
+				})
+			}
+
+			res.status(200).send();
+		}, (err) =>{
+			console.log(err);
+			res.status(500).send();
+		});
 	});
 
 	return router;

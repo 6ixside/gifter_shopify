@@ -9,7 +9,7 @@ module.exports = class Web3Connector{
 				throw new Error('Could not connect to provider');
 
 			this.gifterAccount = this.web3.eth.accounts.privateKeyToAccount("0x" + process.env.PRIVATE_KEY);
-			this.gifterAccount.privateKey = null;
+			//this.gifterAccount.privateKey = null;
 
 			console.log(this.gifterAccount.address);
 		});
@@ -72,6 +72,28 @@ module.exports = class Web3Connector{
 				console.log(error);
 				reject();
 			});
+		});
+	}
+
+	getValidationArgs(a, b, nonce){
+		//create validation objects
+		let aObj = {t: 'address', v:a};
+  	let bObj = {t: 'address', v:b};
+  	let nonceObj = {t: 'uint', v:nonce};
+
+  	//create hashes
+  	let hash1 = this.web3.utils.soliditySha3(aObj, bObj, nonceObj);
+		let hash2 = this.web3.utils.soliditySha3('\x19Ethereum Signed Message:\n32', hash1);
+
+		console.log(hash2);
+
+		return new Promise((resolve, reject) =>{
+			try{
+				let data = this.gifterAccount.sign(hash2);
+				resolve([[data.v], [data.r], [data.s]]); //temporarily nesting arrays
+			} catch(e){
+				reject(e);
+			}
 		});
 	}
 }

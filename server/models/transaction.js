@@ -18,8 +18,8 @@ var contracts = {
 	},
 
 	"CardUtil": {
-		"abi": "TODO",
-		"address": "TODO"
+		"abi": JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../contracts/CardUtil.abi"))),
+		"address": "0x6161584671cc8481c7be842ab34fe85c5211e188"
 	}
 } 
 
@@ -152,9 +152,7 @@ module.exports = (mdb, w3c) =>{
 						resolve(hash);
 					}).on('receipt', (receipt) =>{
 						console.log(receipt);
-					})
-
-					.on('error', (e) =>{
+					}).on('error', (e) =>{
 						reject(e);
 					});
 
@@ -162,15 +160,46 @@ module.exports = (mdb, w3c) =>{
 			});
 		},
 
-		purchaseCardEmail: (account, company_address, cardId) =>{
+		purchaseCardEmail: (company_address, company_owner, position, secret) =>{
 			return new Promise((resolve, reject) =>{
-				var util = new w3c.web3.eth.Contract(contracts["CardUtil"]["abi"], contracts["CardUtil"]["address"]);
-				var method = util.methods.purchaseCardEmail(
-					w3c.gifterAccount.address,
-					company_address,
-					cardId,
-					secret
-				);
+				w3c.getValidationArgs(w3c.gifterAccount.address, company_owner, 0).then((args) =>{
+					var util = new w3c.web3.eth.Contract(contracts["CardUtil"]["abi"], contracts["CardUtil"]["address"]);
+					var method = util.methods.purchaseCardEmail(
+						w3c.gifterAccount.address,
+						company_address,
+						position,
+						w3c.web3.utils.fromAscii(secret),
+						...args
+					);
+					var trx_encode = method.encodeABI();
+
+					//Create event listener and send email here instead of in webhook to avoid emails sent on failiure
+
+					w3c.web3.eth.getTransactionCount(w3c.gifterAccount.address).then(c =>{
+						console.log("transaction count: " + c);
+
+						var trx = new EthereumTx({
+							nonce: w3c.web3.utils.toHex(c),
+							from: w3c.gifterAccount.address,
+							to: company_address,
+							gas: w3c.web3.utils.toHex(500000),
+							gasPrice: w3c.web3.utils.toHex(170000000),
+							data: trx_encode
+						}, {chain: 'rinkeby'});
+						trx.sign(pk);
+
+						var serializedTrx = '0x' + trx.serialize().toString('hex');
+
+						w3c.web3.eth.sendSignedTransaction(serializedTrx).on('transactionHash', (hash) =>{
+							resolve(hash);
+						}).on('receipt', (receipt) =>{
+							console.log(receipt);
+						}).on('error', (e) =>{
+							reject(e);
+						});
+
+					});
+				});
 			});
 		}
 	}

@@ -26,16 +26,16 @@ module.exports = (mdb) =>{
 			var company_collection = mdb.db.collection('company');
 
 			var i = "6sidecontracting@gmail.com"; //isuer
-		  	var s = shop.split('.')[0]; //subject
+	  	var s = shop.split('.')[0]; //subject
 			var a = shop; //audience
 
-		  	//no expiry
-		  	var opts = {
-		  		issuer: i,
-		  		subject: s,
-		  		audience: a,
-		  		algorithm: ["HS256"]
-		  	}
+	  	//no expiry
+	  	var opts = {
+	  		issuer: i,
+	  		subject: s,
+	  		audience: a,
+	  		algorithm: ["HS256"]
+	  	}
 
 			return new Promise((resolve, reject) =>{
 				company_collection.findOne({
