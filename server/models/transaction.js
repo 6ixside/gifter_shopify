@@ -10,7 +10,7 @@ var pk = new Buffer.from(process.env.PRIVATE_KEY, "hex");
 var contracts = {
 	"CompanyFactory": {
 		"abi": JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../contracts/CompanyFactory.abi"))),
-		"address": "0x7f84deeb6aa435181ebcd7b6e64d9e1c20fce5e3"
+		"address": "0x8B81215944e7C9677636176cC92C004cCBc584ff"//"0x7f84deeb6aa435181ebcd7b6e64d9e1c20fce5e3"
 	},
 
 	"Company": {
@@ -19,7 +19,7 @@ var contracts = {
 
 	"CardUtil": {
 		"abi": JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../contracts/CardUtil.abi"))),
-		"address": "0x6161584671cc8481c7be842ab34fe85c5211e188"
+		"address": "0x86C1586f0c0b3E0F3fA3A64b558219Cc4Ad5eFbe"
 	}
 } 
 
@@ -121,17 +121,18 @@ module.exports = (mdb, w3c) =>{
 					let position = t.returnValues.position;
 
 					console.log("card created");
+					console.log(position);
+
 					card_collection.updateOne(
 						{shopifyId: card.id},
 						{$set: {
-							position: position
+							position: (position.toNumber() - 1) //-1 because indexing changes for some reason
 						}
 					});
 				});
 
 				w3c.web3.eth.getTransactionCount(account.address).then(c =>{
 					console.log("transaction count: " + c);
-					console.log(account.address);
 
 					var trx = new EthereumTx({
 						nonce: w3c.web3.utils.toHex(c),
@@ -163,13 +164,24 @@ module.exports = (mdb, w3c) =>{
 		purchaseCardEmail: (company_address, company_owner, position, secret) =>{
 			return new Promise((resolve, reject) =>{
 				w3c.getValidationArgs(w3c.gifterAccount.address, company_owner, 0).then((args) =>{
+					console.log("**params**");
+					console.log(w3c.gifterAccount.address);
+					console.log(company_owner);
+					console.log(company_address);
+					console.log(position);
+					console.log(w3c.web3.utils.fromAscii(secret));
+					console.log(args[0]);
+					console.log(args[1]);
+					console.log(args[2]);
+					console.log("**params**");
 					var util = new w3c.web3.eth.Contract(contracts["CardUtil"]["abi"], contracts["CardUtil"]["address"]);
 					var method = util.methods.purchaseCardEmail(
 						w3c.gifterAccount.address,
+						company_owner,
 						company_address,
 						position,
 						w3c.web3.utils.fromAscii(secret),
-						...args
+						args[0], args[1], args[2]
 					);
 					var trx_encode = method.encodeABI();
 
@@ -181,8 +193,8 @@ module.exports = (mdb, w3c) =>{
 						var trx = new EthereumTx({
 							nonce: w3c.web3.utils.toHex(c),
 							from: w3c.gifterAccount.address,
-							to: company_address,
-							gas: w3c.web3.utils.toHex(500000),
+							to: contracts["CardUtil"]["address"],
+							gas: w3c.web3.utils.toHex(5000000),
 							gasPrice: w3c.web3.utils.toHex(170000000),
 							data: trx_encode
 						}, {chain: 'rinkeby'});

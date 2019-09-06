@@ -85,12 +85,24 @@ module.exports = class Web3Connector{
   	let hash1 = this.web3.utils.soliditySha3(aObj, bObj, nonceObj);
 		let hash2 = this.web3.utils.soliditySha3('\x19Ethereum Signed Message:\n32', hash1);
 
+		console.log("hash1");
+		console.log(hash1);
+
+		console.log("hash2");
 		console.log(hash2);
 
 		return new Promise((resolve, reject) =>{
 			try{
 				let data = this.gifterAccount.sign(hash2);
-				resolve([[data.v], [data.r], [data.s]]); //temporarily nesting arrays
+				let sig = data.signature;
+
+				let r = sig.substr(0, 66);
+				let s = '0x' + sig.substr(66,64);
+				let v = '0x' + sig.substr(130, 2);
+
+				console.log(this.web3.eth.accounts.recover(hash2, v, r, s));
+
+				resolve([[v], [r], [s]]); //temporarily nesting arrays
 			} catch(e){
 				reject(e);
 			}

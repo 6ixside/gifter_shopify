@@ -15,7 +15,7 @@ module.exports = (mdb, tokens, app) =>{
 
 		install.isInstalled(shop).then((isInstalled) =>{
 			//if no shop in db then install app, while doing dev, just always reinstall 
-			if(!isInstalled || true){
+			if(!isInstalled){
 				res.redirect(`/install/?${query}`);
 			}
 			else{

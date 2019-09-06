@@ -63,25 +63,8 @@ module.exports = (mdb, tokens) =>{
 			  }
 			}
 
-			//uncomment to reinstall script tag
-			request.post({
-			  url: scriptTagUrl,
-			  headers: headers,
-			  body: body,
-			  json: true
-			}).then((shopRes) => {
-				console.log("script tag installed");
-
-			  //request.get({
-			  //  url: 'https://' + shop + '/admin/script_tags.json',
-			  //  headers: headers
-			  //}).then((data) => {console.log(data);})
-			}, (err) =>{
-			  console.log('error: ' + err);
-			});
-
 			//uncomment to delete all tags
-			/*request.get({
+			await request.get({
 		    url: 'https://' + shop + '/admin/script_tags.json',
 		    headers: headers
 			}).then(async (tags) =>{
@@ -98,7 +81,24 @@ module.exports = (mdb, tokens) =>{
 						console.log("could not delete: " + url);
 					});
 				}
-			});*/
+			});
+
+			//uncomment to reinstall script tag
+			request.post({
+			  url: scriptTagUrl,
+			  headers: headers,
+			  body: body,
+			  json: true
+			}).then((shopRes) => {
+				console.log("script tag installed");
+
+			  //request.get({
+			  //  url: 'https://' + shop + '/admin/script_tags.json',
+			  //  headers: headers
+			  //}).then((data) => {console.log(data);})
+			}, (err) =>{
+			  console.log('error: ' + err);
+			});
 
 		}
 
@@ -119,6 +119,25 @@ module.exports = (mdb, tokens) =>{
 									'carts/update', 
 									'checkouts/create',
 									'checkouts/update'];
+
+		//uncomment to delete all webhooks
+		await request.get({
+			url: 'https://' + shop + '/admin/api/2019-07/webhooks.json',
+			headers: headers
+		}).then(async (hooks) =>{
+			console.log(hooks);
+
+			for(h of JSON.parse(hooks)['webhooks']){
+				var url = 'https://' + shop + '/admin/api/2019-07/webhooks/' + h.id + '.json';
+
+				await request.delete({
+					url: url,
+					headers: headers
+				}).then(() => {console.log("deleted");}, (err) =>{
+					console.log("could not delete: " + url);
+				});
+			}
+		});
 
 		//uncomment to reinstall webhooks
 		for(t of topics){
@@ -142,25 +161,6 @@ module.exports = (mdb, tokens) =>{
 				console.log(err);
 			});
 		}
-
-		//uncomment to delete all webhooks
-		/*request.get({
-			url: 'https://' + shop + '/admin/api/2019-07/webhooks.json',
-			headers: headers
-		}).then(async (hooks) =>{
-			console.log(hooks);
-
-			for(h of JSON.parse(hooks)['webhooks']){
-				var url = 'https://' + shop + '/admin/api/2019-07/webhooks/' + h.id + '.json';
-
-				await request.delete({
-					url: url,
-					headers: headers
-				}).then(() => {console.log("deleted");}, (err) =>{
-					console.log("could not delete: " + url);
-				});
-			}
-		});*/
 
 		next();
 	}, (req, res, next) =>{

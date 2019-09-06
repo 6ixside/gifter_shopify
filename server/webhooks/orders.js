@@ -33,7 +33,7 @@ module.exports = (mdb, w3c) =>{
 						let position = card.position;
 						let secret = helpers.generateSecret();
 						let generatedHash = crypto.createHash('sha256').update(secret + shop).digest('hex').substr(0, 32);
-
+						
 						//create card on blockchain
 						transaction.purchaseCardEmail(comp.companyAddress, comp.address, position, generatedHash).then((hash) =>{
 							console.log('hash: ' + hash);

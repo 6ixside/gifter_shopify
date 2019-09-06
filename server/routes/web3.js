@@ -118,8 +118,8 @@ module.exports = (mdb, w3c) =>{
 						throw new Error("company/account mismatch")
 					}
 
-					//use the account to create a wallet
-					transaction.createNewCard(account, comp.address, card).then((hash) =>{
+					//use the account to create a card
+					transaction.createNewCard(account, comp.companyAddress, card).then((hash) =>{
 						console.log("transaction hash: " + hash);
 					}, (err) =>{
 						console.log(err);
@@ -141,6 +141,8 @@ module.exports = (mdb, w3c) =>{
 
 		console.log('redeeming');
 		console.log(req.body);
+
+		
 
 		res.status(200).send();
 	});

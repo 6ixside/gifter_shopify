@@ -39,6 +39,28 @@
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "initiator",
+				"type": "address"
+			},
+			{
+				"name": "secret",
+				"type": "bytes32"
+			},
+			{
+				"name": "amount",
+				"type": "uint16"
+			}
+		],
+		"name": "deductBalance",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [
 			{
@@ -241,44 +263,6 @@
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "initiator",
-				"type": "address"
-			},
-			{
-				"name": "companyAddress",
-				"type": "address"
-			},
-			{
-				"name": "cardPosition",
-				"type": "uint16"
-			},
-			{
-				"name": "secret",
-				"type": "bytes32"
-			},
-			{
-				"name": "v",
-				"type": "uint8[]"
-			},
-			{
-				"name": "r",
-				"type": "bytes32[]"
-			},
-			{
-				"name": "s",
-				"type": "bytes32[]"
-			}
-		],
-		"name": "purchaseCardEmail",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"constant": true,
 		"inputs": [
 			{
@@ -344,6 +328,48 @@
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "initiator",
+				"type": "address"
+			},
+			{
+				"name": "companyOwner",
+				"type": "address"
+			},
+			{
+				"name": "companyAddress",
+				"type": "address"
+			},
+			{
+				"name": "cardPosition",
+				"type": "uint16"
+			},
+			{
+				"name": "secret",
+				"type": "bytes32"
+			},
+			{
+				"name": "v",
+				"type": "uint8[]"
+			},
+			{
+				"name": "r",
+				"type": "bytes32[]"
+			},
+			{
+				"name": "s",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "purchaseCardEmail",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"name": "a",
@@ -358,6 +384,23 @@
 		"anonymous": false,
 		"inputs": [],
 		"name": "emailPurchase",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "out1",
+				"type": "bytes32"
+			},
+			{
+				"indexed": false,
+				"name": "out2",
+				"type": "bytes32"
+			}
+		],
+		"name": "debug",
 		"type": "event"
 	}
 ]

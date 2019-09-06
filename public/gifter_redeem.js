@@ -18,7 +18,7 @@ function appendRedeem(){
 	let redeemModal = `
 	<style>
     .redeem-modal{
-        display: block; /* Hidden by default */
+        display: none; /* Hidden by default */
         position: fixed; /* Stay in place */
         z-index: 999; /* Sit on top */
         left: 0;
@@ -131,7 +131,7 @@ function appendRedeem(){
                 <p class="redeem-title"> Redeem Your Card </p>
             </div>
                 <div class="redeem-form-container">
-                    <form class="redeem-form" action="https://435383d1.ngrok.io/w3/redeem-card" method="post">
+                    <form class="redeem-form" action="https://b4112fff.ngrok.io/w3/redeem-card" method="post">
                         <div class="code-area">
                             <label>Code:</label>
                             <input class="input-box" type="text" name="code" />
@@ -174,7 +174,7 @@ function appendRedeem(){
 		console.log(data);
 
 		$.ajax({
-			url: 'https://d4b99d50.ngrok.io/w3/redeem-card',
+			url: 'https://b4112fff.ngrok.io/w3/redeem-card',
 			type: 'POST',
 			data: JSON.stringify(data),
 			contentType: 'application/json',
