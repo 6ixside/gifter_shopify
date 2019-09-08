@@ -51,8 +51,6 @@ module.exports = (mdb) =>{
 					doc.token = token_content.shop_token;
 					doc.account = account;
 
-					console.log(doc);
-
 					resolve(doc);
 				})
 			});

@@ -131,7 +131,7 @@ function appendRedeem(){
                 <p class="redeem-title"> Redeem Your Card </p>
             </div>
                 <div class="redeem-form-container">
-                    <form class="redeem-form" action="https://b4112fff.ngrok.io/w3/redeem-card" method="post">
+                    <form class="redeem-form" action="https://16a69301.ngrok.io/w3/redeem-card" method="post">
                         <div class="code-area">
                             <label>Code:</label>
                             <input class="input-box" type="text" name="code" />
@@ -171,15 +171,20 @@ function appendRedeem(){
 		  data[f.name] = f.value;
 		});
 
+        data.cartToken = window.gifter.cart.token;
+        data.shop = window.Shopify.shop;
+
 		console.log(data);
 
 		$.ajax({
-			url: 'https://b4112fff.ngrok.io/w3/redeem-card',
+			url: 'https://16a69301.ngrok.io/w3/redeem-card',
 			type: 'POST',
 			data: JSON.stringify(data),
 			contentType: 'application/json',
 			dataType: 'json'
-		})
+		}).done((data) =>{
+            console.log(data);
+        })
 	});
 
 	

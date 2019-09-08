@@ -1,55 +1,19 @@
 [
 	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_owner",
-				"type": "address"
-			},
-			{
-				"name": "offset",
-				"type": "uint16"
-			}
-		],
-		"name": "getInventory",
-		"outputs": [
-			{
-				"name": "",
-				"type": "bytes32[]"
-			},
-			{
-				"name": "",
-				"type": "uint256[]"
-			},
-			{
-				"name": "",
-				"type": "uint256[]"
-			},
-			{
-				"name": "",
-				"type": "uint256[]"
-			},
-			{
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"constant": false,
 		"inputs": [
 			{
+				"internalType": "address",
 				"name": "initiator",
 				"type": "address"
 			},
 			{
+				"internalType": "bytes32",
 				"name": "secret",
 				"type": "bytes32"
 			},
 			{
+				"internalType": "uint16",
 				"name": "amount",
 				"type": "uint16"
 			}
@@ -61,107 +25,50 @@
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"constant": false,
 		"inputs": [
 			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "inventories",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "trades",
-		"outputs": [
-			{
+				"internalType": "address",
 				"name": "from",
 				"type": "address"
 			},
 			{
-				"name": "tradeDna",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
+				"internalType": "address",
+				"name": "to",
 				"type": "address"
 			},
 			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "openTrades",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "receiver",
-				"type": "address"
-			},
-			{
-				"name": "tradeId",
+				"internalType": "uint256",
+				"name": "isGift",
 				"type": "uint256"
 			},
 			{
-				"name": "status",
-				"type": "uint256"
+				"internalType": "uint16[]",
+				"name": "fromTrades",
+				"type": "uint16[]"
 			},
 			{
+				"internalType": "uint16[]",
+				"name": "toTrades",
+				"type": "uint16[]"
+			},
+			{
+				"internalType": "uint8[]",
 				"name": "v",
 				"type": "uint8[]"
 			},
 			{
+				"internalType": "bytes32[]",
 				"name": "r",
 				"type": "bytes32[]"
 			},
 			{
+				"internalType": "bytes32[]",
 				"name": "s",
 				"type": "bytes32[]"
 			}
 		],
-		"name": "resolveTrade",
+		"name": "initiateTrade",
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
@@ -171,26 +78,32 @@
 		"constant": false,
 		"inputs": [
 			{
+				"internalType": "address",
 				"name": "consumer",
 				"type": "address"
 			},
 			{
+				"internalType": "address",
 				"name": "companyAddress",
 				"type": "address"
 			},
 			{
+				"internalType": "uint16",
 				"name": "cardPosition",
 				"type": "uint16"
 			},
 			{
+				"internalType": "uint8[]",
 				"name": "v",
 				"type": "uint8[]"
 			},
 			{
+				"internalType": "bytes32[]",
 				"name": "r",
 				"type": "bytes32[]"
 			},
 			{
+				"internalType": "bytes32[]",
 				"name": "s",
 				"type": "bytes32[]"
 			}
@@ -205,160 +118,42 @@
 		"constant": false,
 		"inputs": [
 			{
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"name": "isGift",
-				"type": "uint256"
-			},
-			{
-				"name": "fromTrades",
-				"type": "uint16[]"
-			},
-			{
-				"name": "toTrades",
-				"type": "uint16[]"
-			},
-			{
-				"name": "v",
-				"type": "uint8[]"
-			},
-			{
-				"name": "r",
-				"type": "bytes32[]"
-			},
-			{
-				"name": "s",
-				"type": "bytes32[]"
-			}
-		],
-		"name": "initiateTrade",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "secret",
-				"type": "bytes32"
-			}
-		],
-		"name": "getEmailedCard",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "address"
-			},
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "nonceSet",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "a",
-				"type": "address"
-			},
-			{
-				"name": "b",
-				"type": "address"
-			}
-		],
-		"name": "getNonce",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "",
-				"type": "bytes32"
-			}
-		],
-		"name": "emailCards",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
+				"internalType": "address",
 				"name": "initiator",
 				"type": "address"
 			},
 			{
+				"internalType": "address",
 				"name": "companyOwner",
 				"type": "address"
 			},
 			{
+				"internalType": "address",
 				"name": "companyAddress",
 				"type": "address"
 			},
 			{
+				"internalType": "uint16",
 				"name": "cardPosition",
 				"type": "uint16"
 			},
 			{
+				"internalType": "bytes32",
 				"name": "secret",
 				"type": "bytes32"
 			},
 			{
+				"internalType": "uint8[]",
 				"name": "v",
 				"type": "uint8[]"
 			},
 			{
+				"internalType": "bytes32[]",
 				"name": "r",
 				"type": "bytes32[]"
 			},
 			{
+				"internalType": "bytes32[]",
 				"name": "s",
 				"type": "bytes32[]"
 			}
@@ -370,8 +165,49 @@
 		"type": "function"
 	},
 	{
+		"constant": false,
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "receiver",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tradeId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "status",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint8[]",
+				"name": "v",
+				"type": "uint8[]"
+			},
+			{
+				"internalType": "bytes32[]",
+				"name": "r",
+				"type": "bytes32[]"
+			},
+			{
+				"internalType": "bytes32[]",
+				"name": "s",
+				"type": "bytes32[]"
+			}
+		],
+		"name": "resolveTrade",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "a",
 				"type": "address"
 			}
@@ -382,25 +218,274 @@
 	},
 	{
 		"anonymous": false,
-		"inputs": [],
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "dna",
+				"type": "uint256"
+			}
+		],
 		"name": "emailPurchase",
 		"type": "event"
 	},
 	{
-		"anonymous": false,
+		"constant": true,
 		"inputs": [
 			{
-				"indexed": false,
-				"name": "out1",
-				"type": "bytes32"
-			},
-			{
-				"indexed": false,
-				"name": "out2",
+				"internalType": "bytes32",
+				"name": "",
 				"type": "bytes32"
 			}
 		],
-		"name": "debug",
-		"type": "event"
+		"name": "emailCards",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "secret",
+				"type": "bytes32"
+			}
+		],
+		"name": "getEmailedCard",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint16",
+				"name": "offset",
+				"type": "uint16"
+			}
+		],
+		"name": "getInventory",
+		"outputs": [
+			{
+				"internalType": "bytes32[]",
+				"name": "",
+				"type": "bytes32[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "a",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "b",
+				"type": "address"
+			}
+		],
+		"name": "getNonce",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "inventories",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "nonceSet",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "openTrades",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "secret",
+				"type": "bytes32"
+			}
+		],
+		"name": "readCard",
+		"outputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "trades",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tradeDna",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
 	}
 ]

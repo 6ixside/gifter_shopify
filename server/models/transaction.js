@@ -26,12 +26,12 @@ var contracts = {
 module.exports = (mdb, w3c) =>{
 	return{
 		createNewCompany: (url, name, password) =>{
-			var cf = new w3c.web3.eth.Contract(contracts["CompanyFactory"]["abi"], contracts["CompanyFactory"]["address"]);
-			var company_collection = mdb.db.collection('company');
-
 			return new Promise((resolve, reject) =>{
 				if(name.length > 32)
 					reject({error: "Company name must be less than 32 characters"});
+
+				var cf = new w3c.web3.eth.Contract(contracts["CompanyFactory"]["abi"], contracts["CompanyFactory"]["address"]);
+				var company_collection = mdb.db.collection('company');
 
 				//create a new account on the blockchain to own the company
 				w3c.createAccount(password).then((data) =>{
@@ -164,16 +164,6 @@ module.exports = (mdb, w3c) =>{
 		purchaseCardEmail: (company_address, company_owner, position, secret) =>{
 			return new Promise((resolve, reject) =>{
 				w3c.getValidationArgs(w3c.gifterAccount.address, company_owner, 0).then((args) =>{
-					console.log("**params**");
-					console.log(w3c.gifterAccount.address);
-					console.log(company_owner);
-					console.log(company_address);
-					console.log(position);
-					console.log(w3c.web3.utils.fromAscii(secret));
-					console.log(args[0]);
-					console.log(args[1]);
-					console.log(args[2]);
-					console.log("**params**");
 					var util = new w3c.web3.eth.Contract(contracts["CardUtil"]["abi"], contracts["CardUtil"]["address"]);
 					var method = util.methods.purchaseCardEmail(
 						w3c.gifterAccount.address,
@@ -211,6 +201,86 @@ module.exports = (mdb, w3c) =>{
 						});
 
 					});
+				});
+			});
+		},
+
+		validateCode: (secret, cartToken) =>{
+			return new Promise((resolve, reject) =>{
+				var applied_collection = mdb.db.collection("appliedcards");
+				var util = new w3c.web3.eth.Contract(contracts["CardUtil"]["abi"], contracts["CardUtil"]["address"]);
+				var method = util.methods.getEmailedCard(w3c.web3.utils.fromAscii(secret));
+				var trx_encode = method.encodeABI();
+
+				method.call().then((card) =>{
+					console.log(card);
+
+					if(card.eq(0)) //check if card is null
+						resolve(false);
+					else{
+						applied_collection.insertOne({
+							cartToken: cartToken,
+							secret: secret
+						}).then(() =>{
+							resolve(true);
+						}, (err) =>{
+							reject(err);
+						});
+					}
+				}, (err) =>{
+					reject(err);
+				})
+			});
+		},
+
+		deductBalance: (secret, amount) =>{
+			return new Promise((resolve, reject) =>{
+				var util = new w3c.web3.eth.Contract(contracts["CardUtil"]["abi"], contracts["CardUtil"]["address"]);
+				var method = util.methods.deductBalance(
+					w3c.gifterAccount.address,
+					w3c.web3.utils.fromAscii(secret),
+					amount
+				);
+				var trx_encode = method.encodeABI();
+
+				w3c.web3.eth.getTransactionCount(w3c.gifterAccount.address).then(c =>{
+					console.log("transaction count: " + c);
+
+					var trx = new EthereumTx({
+						nonce: w3c.web3.utils.toHex(c),
+						from: w3c.gifterAccount.address,
+						to: contracts["CardUtil"]["address"],
+						gas: w3c.web3.utils.toHex(10000000),
+						gasPrice: w3c.web3.utils.toHex(170000000),
+						data: trx_encode
+					}, {chain: 'rinkeby'});
+					trx.sign(pk);
+
+					var serializedTrx = '0x' + trx.serialize().toString('hex');
+
+					w3c.web3.eth.sendSignedTransaction(serializedTrx).on('transactionHash', (hash) =>{
+						resolve(hash);
+					}).on('receipt', (receipt) =>{
+						console.log(receipt);
+					}).on('error', (e) =>{
+						reject(e);
+					});
+				});
+			});
+		},
+
+		getCardInfo: (secret) =>{
+			return new Promise((resolve, reject) =>{
+				var util = new w3c.web3.eth.Contract(contracts["CardUtil"]["abi"], contracts["CardUtil"]["address"]);
+				var method = util.methods.readCard(w3c.web3.utils.fromAscii(secret));
+				var trx_encode = method.encodeABI();
+
+				method.call().then((card) =>{
+					console.log(card);
+
+					resolve(card);
+				}, (err) =>{
+					reject(err);
 				});
 			});
 		}

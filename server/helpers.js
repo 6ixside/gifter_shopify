@@ -29,7 +29,7 @@ module.exports = () =>{
 				if(err)
 					console.log(err);
 
-				console.log(info);
+				//console.log(info);
 			});
 		},
 

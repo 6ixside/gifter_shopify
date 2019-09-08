@@ -6,20 +6,53 @@ var helpers = require('../helpers')();
 var router = express.Router();
 
 module.exports = (mdb, w3c) =>{
+	let cart = require('../models/cart.js')(mdb);
+	let company = require('../models/company.js')(mdb);
+	let giftcards = require('../models/giftcards.js')(mdb);
+	let transaction = require('../models/transaction.js')(mdb, w3c);
 
 	router.post('/create', (req, res) =>{
 		console.log("checkout paid!");
-		let company = require('../models/company.js')(mdb);
-		let giftcards = require('../models/giftcards.js')(mdb);
-		let transaction = require('../models/transaction.js')(mdb, w3c);
-
-		console.log(req.get('X-Shopify-Hmac-Sha256'));
-		console.log(req.body);
-
+		
 		let shop = req.get('X-Shopify-Shop-Domain');
 		let lineItems = req.body.line_items;
 		let customerEmail = req.body.email;
+		let cartToken = req.body.cart_token;
+		let isGifterPurchase = false;
+		let total = parseFloat(req.body.total_price);
+		let deduction = 0;
 
+		console.log(req.body.discount_codes);
+		for(discount of req.body.discount_codes){
+			if(discount.code == 'gifter applied discount'){
+				isGifterPurchase = true;
+
+				deduction += parseFloat(discount.amount);
+			}
+		}
+
+		if(deduction > total)
+			deduction = total;
+
+		if(isGifterPurchase){
+			//after pay, remove gift card from applied cards
+			cart.removeGiftCard(cartToken).then((secret) =>{
+				console.log("gift card removed");
+				console.log(deduction);
+
+				transaction.deductBalance(secret, deduction).then(() =>{
+					console.log("giftcard updated successfully");
+				}, (err) =>{
+					console.log(err);
+					res.status(500).send();
+				})
+			}, (err) =>{
+				console.log(err);
+				res.status(500).send();
+			});
+		}
+
+		//check for giftcard purchased
 		company.getCompany(shop).then(async (comp) =>{
 			for(item of lineItems){
 				let id = item.product_id;

@@ -50,6 +50,21 @@ module.exports = (mdb) =>{
 					reject(err);
 				});
 			});
+		},
+
+		getAppliedCards: (cartToken) =>{
+			var applied_collection = mdb.db.collection('appliedcards');
+
+			return new Promise((resolve, reject) =>{
+				applied_collection.find({
+					cartToken: cartToken
+				}).toArray((err, res) =>{
+					if(err)
+						reject(err);
+
+					resolve(res);
+				});
+			});
 		}
 	}
 }

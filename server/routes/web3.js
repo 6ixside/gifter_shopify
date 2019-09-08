@@ -1,5 +1,6 @@
 var express = require('express');
 var cookie = require('cookie');
+var crypto = require('crypto');
 var request = require('request-promise');
 var helpers = require('../helpers');
 var router = express.Router();
@@ -136,15 +137,21 @@ module.exports = (mdb, w3c) =>{
 	});
 
 	router.post('/redeem-card', (req, res, next) =>{
-		//var shop = req.body.shop;
-		//var code = req.body.code;
-
 		console.log('redeeming');
 		console.log(req.body);
 
-		
+		let shop = req.body.shop;
+		let code = req.body.code;
+		let cartToken = req.body.cartToken;
+		let generatedHash = crypto.createHash('sha256').update(code + shop).digest('hex').substr(0, 32);
 
-		res.status(200).send();
+		transaction.validateCode(generatedHash, cartToken).then((status) =>{
+			console.log(status);
+			res.status(200).json({status: status}); //send status back to modal page
+		}, (err) =>{
+			console.log(err);
+			res.status(500).send();
+		});
 	});
 
 

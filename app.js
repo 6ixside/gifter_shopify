@@ -25,7 +25,7 @@ const store = require('./server/routes/store')(mdb);
 //webhooks
 const orders = require('./server/webhooks/orders')(mdb, w3c);
 const carts = require('./server/webhooks/carts')(mdb);
-const checkouts = require('./server/webhooks/checkouts')(mdb);
+const checkouts = require('./server/webhooks/checkouts')(mdb, w3c, tokens);
 
 
 app.prepare().then(() => {
