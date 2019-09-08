@@ -4,9 +4,16 @@ import fetch from 'isomorphic-fetch';
 export class RestProvider extends React.Component{
 	public companyExists(){
 		return new Promise((resolve, reject) =>{
+			console.log("fetching");
+
 			fetch(process.env.NGROK + '/store/exists/', {
+				headers : { 
+		        	'Content-Type': 'application/json',
+		        	'Accept': 'application/json'
+		        },
 				method: 'GET'
 			}).then((res) =>{
+				console.log(res.body)
 				resolve(res);
 			}, (err) =>{
 				console.log("exists error");

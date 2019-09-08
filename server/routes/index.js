@@ -3,6 +3,7 @@ var router = express.Router();
 
 var apiKey = process.env.API_KEY;
 var apiSecret = process.env.API_SECRET;
+var appUrl = process.env.NGROK;
 const authentication = require('../middlewares/authentication.js')(apiKey, apiSecret);
 
 module.exports = (mdb, tokens, app) =>{
@@ -16,7 +17,7 @@ module.exports = (mdb, tokens, app) =>{
 		install.isInstalled(shop).then((isInstalled) =>{
 			//if no shop in db then install app, while doing dev, just always reinstall 
 			if(!isInstalled){
-				res.redirect(`/install/?${query}`);
+				res.redirect(appUrl + `/install/?${query}`);
 			}
 			else{
 				console.log('doing authentication');
