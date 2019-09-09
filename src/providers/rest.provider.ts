@@ -13,7 +13,7 @@ export class RestProvider extends React.Component{
 		        },
 				method: 'GET'
 			}).then((res) =>{
-				console.log(res.body)
+				console.log(res)
 				resolve(res);
 			}, (err) =>{
 				console.log("exists error");
