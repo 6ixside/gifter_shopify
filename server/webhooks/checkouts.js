@@ -60,15 +60,17 @@ module.exports = (mdb, w3c, tokens) =>{
 					}
 				}
 
-				request.put({
-					url: url,
-					headers: headers,
-					body: body,
-					json: true
-				}).then((shopRes) =>{
-					console.log("discount applied!");
-					console.log(shopRes);
-				});
+				if(discount > 0){
+					request.put({
+						url: url,
+						headers: headers,
+						body: body,
+						json: true
+					}).then((shopRes) =>{
+						console.log("discount applied!");
+						res.status(200).send(); //ok
+					});
+				}
 
 				console.log(cards);
 
@@ -84,7 +86,7 @@ module.exports = (mdb, w3c, tokens) =>{
 	});
 
 	router.post('/update', (req, res) =>{
-		console.log("checkout created!");
+				console.log("checkout created!");
 		//console.log(req.body);
 
 		let shop = req.get('X-Shopify-Shop-Domain');
@@ -130,15 +132,17 @@ module.exports = (mdb, w3c, tokens) =>{
 					}
 				}
 
-				request.put({
-					url: url,
-					headers: headers,
-					body: body,
-					json: true
-				}).then((shopRes) =>{
-					console.log("discount applied!");
-					console.log(shopRes);
-				});
+				if(discount > 0){
+					request.put({
+						url: url,
+						headers: headers,
+						body: body,
+						json: true
+					}).then((shopRes) =>{
+						console.log("discount applied!");
+						res.status(200).send(); //ok
+					});
+				}
 
 				console.log(cards);
 
@@ -151,6 +155,7 @@ module.exports = (mdb, w3c, tokens) =>{
 			console.log(err);
 			res.status(500).send();
 		});
+
 	});
 
 	//for removing the gift card from applied cards table and also

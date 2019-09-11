@@ -42,6 +42,7 @@ module.exports = (mdb, w3c) =>{
 
 				transaction.deductBalance(secret, deduction).then(() =>{
 					console.log("giftcard updated successfully");
+					res.status(200).send();
 				}, (err) =>{
 					console.log(err);
 					res.status(500).send();

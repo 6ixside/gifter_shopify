@@ -88,6 +88,16 @@ function appendRedeem(){
         border: 1px solid black;
         border-radius: 7px;
     }
+    .exit-button{
+        background: white;
+        border: 1px solid black;
+        border-radius: 7px;
+        margin-left:90%
+    }
+    .exit-button:hover{
+        background-color: #3d4246;
+        color: white;
+    }
     .button:hover{
         background-color: #3d4246;
         color: white;
@@ -127,31 +137,35 @@ function appendRedeem(){
         <div class="redeem-header">
             <span class="close">&times;</span>
         </div>
-            <div>
+        <div>
+            <input class="exit-button" type="button" value="X">
+        </div>
+            <div style="text-align: center">
                 <p class="redeem-title"> Redeem Your Card </p>
             </div>
                 <div class="redeem-form-container">
-                    <form class="redeem-form" action="https://16a69301.ngrok.io/w3/redeem-card" method="post">
+                    <form class="redeem-form" action="https://48e593af.ngrok.io/w3/redeem-card" method="post">
                         <div class="code-area">
                             <label>Code:</label>
                             <input class="input-box" type="text" name="code" />
-                            <div class="successful-redeem"> Redeemed =&#10004 </div>
-                            <div class="failed-redeem"> Invalid Code &#10008 </div>
                         </div>
                         <div class="redeem-form-container-submit">
                             <input class="button" type="submit" value="submit">
                     </form>
                         </div>
                 </div>
-                <span
+                <div style="text-align: center"
                 class="download-link"> Tired of keeping your gift cards in your email? Click <a href="http://www.gifterextension.com">here!</a>
-            </span>
+            </div>
             </div>
 `;
 
 	let redeemButton = `
 		<input name="enter_gift_card" type="button" class="btn btn--secondary small--hide cart__submit-control gifter-redeem" value="Redeem Gift Card"/>
 	`;
+
+    let redeemSuccess = `<div class="successful-redeem"> Redeemed &#10004 </div>`;
+    let redeemFail = `<div class="failed-redeem"> Invalid Code &#10008 </div>`;
 
 	let redeemContainer = document.createElement('div');
 	redeemContainer.classList.add('redeemContainer');
@@ -163,8 +177,15 @@ function appendRedeem(){
 	var $rModal = $('.redeem-modal');
 	var $rForm = $('form.redeem-form');
 
+    $('input.exit-button').click(() =>{
+        $('.redeem-modal').css('display', 'none');
+    });
+
 	$rForm.submit((e) =>{
 		e.preventDefault();
+
+        $('div.successful-redeem').remove();
+        $('div.failed-redeem').remove();
 
 		let data = {}
 		$.each($rForm.serializeArray(), function(i, f) {
@@ -177,14 +198,17 @@ function appendRedeem(){
 		console.log(data);
 
 		$.ajax({
-			url: 'https://16a69301.ngrok.io/w3/redeem-card',
+			url: 'https://48e593af.ngrok.io/w3/redeem-card',
 			type: 'POST',
 			data: JSON.stringify(data),
 			contentType: 'application/json',
 			dataType: 'json'
 		}).done((data) =>{
-            console.log(data);
-        })
+            if(data.status)
+                $('div.code-area').append(redeemSuccess);
+            else
+                $('div.code-area').append(redeemFail);
+        });
 	});
 
 	

@@ -1,4 +1,5 @@
 .env
 /src/.next
+/srs/_next
 /node_modules
 package-lock.json

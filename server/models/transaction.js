@@ -138,8 +138,8 @@ module.exports = (mdb, w3c) =>{
 						nonce: w3c.web3.utils.toHex(c),
 						from: account.address,
 						to: company_address,
-						gas: w3c.web3.utils.toHex(500000),
-						gasPrice: w3c.web3.utils.toHex(170000000),
+						gas: w3c.web3.utils.toHex(2000000),
+						gasPrice: w3c.web3.utils.toHex(300000000),
 						data: trx_encode
 					}, {chain: 'rinkeby'});
 					trx.sign(Buffer.from(account.privateKey.slice(2), "hex"));
@@ -184,8 +184,8 @@ module.exports = (mdb, w3c) =>{
 							nonce: w3c.web3.utils.toHex(c),
 							from: w3c.gifterAccount.address,
 							to: contracts["CardUtil"]["address"],
-							gas: w3c.web3.utils.toHex(5000000),
-							gasPrice: w3c.web3.utils.toHex(170000000),
+							gas: w3c.web3.utils.toHex(2000000),
+							gasPrice: w3c.web3.utils.toHex(300000000),
 							data: trx_encode
 						}, {chain: 'rinkeby'});
 						trx.sign(pk);
@@ -250,8 +250,8 @@ module.exports = (mdb, w3c) =>{
 						nonce: w3c.web3.utils.toHex(c),
 						from: w3c.gifterAccount.address,
 						to: contracts["CardUtil"]["address"],
-						gas: w3c.web3.utils.toHex(10000000),
-						gasPrice: w3c.web3.utils.toHex(170000000),
+						gas: w3c.web3.utils.toHex(500000),
+						gasPrice: w3c.web3.utils.toHex(300000000),
 						data: trx_encode
 					}, {chain: 'rinkeby'});
 					trx.sign(pk);

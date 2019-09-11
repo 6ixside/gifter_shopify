@@ -73,6 +73,8 @@ module.exports = (mdb) =>{
 				}).then((doc) =>{
 					if(doc)
 						secret = doc.secret;
+					else
+						reject("No Card To Delete");
 				}, (err) =>{
 					reject(err);
 				});
